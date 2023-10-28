@@ -2,13 +2,11 @@ package org.javacoders.blog.payloads;
 
 import java.util.List;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 public class PostResponse {
 	
 	private List<PostDto> content;
@@ -17,4 +15,5 @@ public class PostResponse {
 	private long totalElements;
 	private int totalPages;
 	private boolean lastPage;
+
 }

@@ -1,12 +1,11 @@
 package org.javacoders.blog.payloads;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 public class CommentDto {
-	
 	private int id;
 	private String content;
 }

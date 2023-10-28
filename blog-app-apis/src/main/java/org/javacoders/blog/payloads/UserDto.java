@@ -1,66 +1,33 @@
 package org.javacoders.blog.payloads;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 public class UserDto {
 	
 	private int id;
 	
 	@NotEmpty
-	@Size(min = 4, message = "Username must be atleast 4 characters !!")
+	@Size(min=4, message="Username must be atleast 4 characters !!")
 	private String name;
 	
-	@Email(message = "Email adress is not valid !!")
+	@Email(message="Email address is not valid !!")
 	private String email;
 	
 	@NotEmpty
-	@Size(min = 3, max = 10, message = "Password must be between 3-10 characters !!")
+	@Size(min=3, max=10, message="Password must be min of 3 chars and max of 10 chars !!")
 	private String password;
 	
 	@NotEmpty
 	private String about;
-
-	public UserDto() {}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getAbout() {
-		return about;
-	}
-
-	public void setAbout(String about) {
-		this.about = about;
-	}
+	
+	private Set<RoleDto> roles = new HashSet<>();
 }

@@ -37,93 +37,81 @@ public class PostController {
 	
 	@Value("${project.image}")
 	private String path;
-
+	
 	public PostController(PostService postService, FileService fileService) {
 		this.postService = postService;
 		this.fileService = fileService;
 	}
-	
-	// create
+
 	@PostMapping("/user/{userId}/category/{categoryId}/posts")
 	public ResponseEntity<PostDto> createPost(
 			@RequestBody PostDto postDto,
 			@PathVariable Integer userId,
 			@PathVariable Integer categoryId)
 	{
-		PostDto createPost = this.postService.createPost(postDto, userId, categoryId);
-		return new ResponseEntity<PostDto>(createPost, HttpStatus.CREATED);
+		PostDto createdPost = this.postService.createPost(postDto, userId, categoryId);
+		return new ResponseEntity<PostDto>(createdPost, HttpStatus.CREATED);
 	}
 	
-	// get by user
 	@GetMapping("/user/{userId}/posts")
-	public ResponseEntity<List<PostDto>> getPostsByUser(@PathVariable Integer userId){
+	public ResponseEntity<List<PostDto>> getPostByUser(@PathVariable Integer userId){
 		List<PostDto> posts = this.postService.getPostsByUser(userId);
-		System.out.println(userId);
-		
-		
 		return new ResponseEntity<List<PostDto>>(posts, HttpStatus.OK);
 	}
 	
-	// get by category
 	@GetMapping("/category/{categoryId}/posts")
-	public ResponseEntity<List<PostDto>> getPostsByCategory(@PathVariable Integer categoryId){
+	public ResponseEntity<List<PostDto>> getPostByCategory(@PathVariable Integer categoryId){
 		List<PostDto> posts = this.postService.getPostsByCategory(categoryId);
 		return new ResponseEntity<List<PostDto>>(posts, HttpStatus.OK);
 	}
 	
-	// get all posts
 	@GetMapping("/posts")
 	public ResponseEntity<PostResponse> getAllPosts(
 			@RequestParam(value = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
 			@RequestParam(value = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
 			@RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY, required = false) String sortBy,
-			@RequestParam(value = "sortDir", defaultValue = AppConstants.SORT_DIR, required = false) String sortDir){
+			@RequestParam(value = "sortDir", defaultValue = AppConstants.SORT_DIR, required = false) String sortDir) {
 		PostResponse postResponse = this.postService.getAllPosts(pageNumber, pageSize, sortBy, sortDir);
 		return new ResponseEntity<PostResponse>(postResponse, HttpStatus.OK);
 	}
 	
-	// get post details by id
 	@GetMapping("/posts/{postId}")
-	public ResponseEntity<PostDto> getPostById(@PathVariable Integer postId){
-		PostDto postDto = this.postService.getPostById(postId);
-		return new ResponseEntity<PostDto>(postDto, HttpStatus.OK);
+	public ResponseEntity<PostDto> getPostById(@PathVariable Integer postId) {
+		PostDto post = this.postService.getPostById(postId);
+		return new ResponseEntity<PostDto>(post, HttpStatus.OK);
 	}
 	
-	// delete post
 	@DeleteMapping("/posts/{postId}")
-	public ApiResponse deletePost(@PathVariable Integer postId) {
+	public ApiResponse deletePostById(@PathVariable Integer postId) {
 		this.postService.deletePost(postId);
-		return new ApiResponse("Post is successfully deleted !!", true);
+		return new ApiResponse("Post is deleted successfully !!", true);
 	}
 	
-	// update post
 	@PutMapping("/posts/{postId}")
-	public ResponseEntity<PostDto> updatePost(@RequestBody PostDto postDto, @PathVariable Integer postId) {
-		PostDto updatePost = this.postService.updatePost(postDto, postId);
-		return new ResponseEntity<PostDto>(updatePost, HttpStatus.OK);
+	public ResponseEntity<PostDto> updatePost(@RequestBody PostDto postDto,
+			@PathVariable Integer postId) {
+		PostDto updatedPost = this.postService.updatePost(postDto, postId);
+		return new ResponseEntity<PostDto>(updatedPost, HttpStatus.OK);
 	}
 	
-	// search
-	@GetMapping("/posts/search/{keywords}")
-	public ResponseEntity<List<PostDto>> searchPostByTitle(@PathVariable("keywords") String keywords) {
-		List<PostDto> result = this.postService.searchPosts(keywords);
+	@GetMapping("posts/search/{keyword}")
+	public ResponseEntity<List<PostDto>> searchPostByTitle(@PathVariable String keyword) {
+		List<PostDto> result = this.postService.searchPosts(keyword);
 		return new ResponseEntity<List<PostDto>>(result, HttpStatus.OK);
 	}
 	
-	// post image upload
 	@PostMapping("/post/image/upload/{postId}")
 	public ResponseEntity<PostDto> uploadPostImage(@RequestParam("image") MultipartFile image,
-			@PathVariable Integer postId) throws IOException{
+			@PathVariable Integer postId) throws IOException {
 		
 		PostDto postDto = this.postService.getPostById(postId);
 		String fileName = this.fileService.uploadImage(path, image);
 		postDto.setImageName(fileName);
-		PostDto updatePost = this.postService.updatePost(postDto, postId);
-		return new ResponseEntity<PostDto>(updatePost, HttpStatus.OK); 
+		PostDto updatedPost = this.postService.updatePost(postDto, postId);
+		return new ResponseEntity<PostDto>(updatedPost, HttpStatus.OK);
 	}
 	
-	// method to serve files
-	@GetMapping(value="/post/image/{imageName}", produces = MediaType.IMAGE_JPEG_VALUE)
+	@GetMapping(value = "/post/image/{imageName}", produces = MediaType.IMAGE_JPEG_VALUE)
 	public void downloadImage(
 			@PathVariable("imageName") String imageName,
 			HttpServletResponse response) throws IOException {
@@ -131,13 +119,7 @@ public class PostController {
 		response.setContentType(MediaType.IMAGE_JPEG_VALUE);
 		StreamUtils.copy(resource, response.getOutputStream());
 	}
-	
-	
 }
-
-
-
-
 
 
 

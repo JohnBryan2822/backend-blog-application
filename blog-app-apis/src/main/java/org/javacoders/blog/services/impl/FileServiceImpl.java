@@ -18,16 +18,15 @@ public class FileServiceImpl implements FileService {
 
 	@Override
 	public String uploadImage(String path, MultipartFile file) throws IOException {
-		
 		// File name
 		String name = file.getOriginalFilename();
 		// abc.png
 		
-		// random name generate file
-		String randomId = UUID.randomUUID().toString();
-		String fileName1 = randomId.concat(name.substring(name.lastIndexOf(".")));
+		// Random name generate file
+		String randomID = UUID.randomUUID().toString();
+		String fileName1 = randomID.concat(name.substring(name.lastIndexOf(".")));
 		
-		// Full Path
+		// Fullpath
 		String filePath = path + File.separator + fileName1;
 		
 		// create folder if not created
@@ -37,28 +36,19 @@ public class FileServiceImpl implements FileService {
 		}
 		
 		// file copy
-		Files.copy(file.getInputStream(), Paths.get(filePath));
+		Files.copy(file.getInputStream(), Paths.get(path));
 		
-		return fileName1;
+		return name;
 	}
 
 	@Override
 	public InputStream getResource(String path, String fileName) throws FileNotFoundException {
 		String fullPath = path + File.separator + fileName;
-		InputStream is = new FileInputStream(fullPath);
+		InputStream inputStream = new FileInputStream(fullPath);
+		
 		// db logic to return input stream
-		return is;
+		
+		return inputStream;
 	}
+
 }
-
-
-
-
-
-
-
-
-
-
-
-

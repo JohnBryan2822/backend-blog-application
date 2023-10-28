@@ -3,7 +3,6 @@ package org.javacoders.blog.controllers;
 import org.javacoders.blog.payloads.ApiResponse;
 import org.javacoders.blog.payloads.CommentDto;
 import org.javacoders.blog.services.CommentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,27 +13,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/api")
 public class CommentController {
 	
-	@Autowired
 	private CommentService commentService;
+
+	public CommentController(CommentService commentService) {
+		this.commentService = commentService;
+	}
 	
 	@PostMapping("/post/{postId}/comments")
-	public ResponseEntity<CommentDto> createComment(@RequestBody CommentDto comment, @PathVariable Integer postId){
-		CommentDto createComment = this.commentService.createComments(comment, postId);
-		return new ResponseEntity<CommentDto>(createComment, HttpStatus.CREATED);
+	public ResponseEntity<CommentDto> createComment(@RequestBody CommentDto commentDto,
+			@PathVariable Integer postId) {
+		CommentDto createdComment = this.commentService.createComment(commentDto, postId);
+		return new ResponseEntity<CommentDto>(createdComment, HttpStatus.CREATED);
 	}
 	
 	@DeleteMapping("/comments/{commentId}")
-	public ResponseEntity<ApiResponse> deleteComment(@PathVariable Integer commentId){
-		
+	public ResponseEntity<ApiResponse> deleteComment(@PathVariable Integer commentId) {
 		this.commentService.deleteComment(commentId);
-		
-		return new ResponseEntity<ApiResponse>(new ApiResponse("Comment deleted successfully", true), HttpStatus.OK);
+		return new ResponseEntity<ApiResponse>(
+				new ApiResponse("Comment deleted successfully !!", true), HttpStatus.OK);
 	}
-	
 }
+
+
+
+
 
 
 
